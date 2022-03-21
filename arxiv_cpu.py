@@ -13,12 +13,14 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 from transformers import GPT2Tokenizer, TrainingArguments, Trainer, GPT2LMHeadModel
 
-## disable gpu for this run
+# disable gpu for this run
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
-## Define class and functions
+# Define class and functions
 # --------
 
 # Dataset class
+
+
 class ArxivDataset(Dataset):
     """
     Class for loading and processing Arxiv Dataset from Kaggle
@@ -48,7 +50,8 @@ class ArxivDataset(Dataset):
             )
             # append to list
             self.input_ids.append(torch.tensor(encodings_dict["input_ids"]))
-            self.attn_masks.append(torch.tensor(encodings_dict["attention_mask"]))
+            self.attn_masks.append(torch.tensor(
+                encodings_dict["attention_mask"]))
             self.labels.append(txt.split("Title:")[1].split("<")[0])
 
     def __len__(self):
@@ -91,7 +94,7 @@ def load_arxiv_dataset(tokenizer, samples):
     return train_dataset, X_test
 
 
-## Load model and data
+# Load model and data
 # --------
 
 save_name = "/home/alex/DeepLearning/sentiment_transformer/results/arxiv-model-20220308"
@@ -112,7 +115,7 @@ else:
     print("Training is not enabled on cpu in this script")
     exit()
 
-## Test
+# Test
 # set the model to eval mode
 _ = model.eval()
 
@@ -153,11 +156,10 @@ for (txt, title) in zip(test_txt, titles):
         for decoded in random_outputs
     ]
     # extract the predicted sentiment
-    print(
-        "\n\n----------REAL----------\n",
-        txt + title,
-        "\n--------------Generated------------------\n",
-    )
+    print("\n\n----------REAL----------\n",
+          txt + title,
+          "\n--------------Generated------------------\n",
+          )
     for pred in pred_texts_mle:
         print("\nGenerated MLE Title:", pred.split("\nTitle:")[1], "\n")
     for pred in pred_texts_random:
