@@ -2,6 +2,7 @@
 #!pip install transformers==4.8.2
 
 # import packages
+import logging
 import os
 import re
 import torch
@@ -19,6 +20,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 # --------
 
 # Dataset class
+logger = logging.getLogger(__name__)
 
 
 class ArxivDataset(Dataset):
