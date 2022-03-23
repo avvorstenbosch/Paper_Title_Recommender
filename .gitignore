@@ -152,9 +152,16 @@ cython_debug/
 #.idea/
 
 #Datatypes
-*.cvs
+*.csv
 *.tsv
 *.npy
 *.txt
 *.zip
+*.bin
+*.json
+
+#Torch specific
+*.pt
+*.pth
+/logs
 
