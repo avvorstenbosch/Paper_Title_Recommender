@@ -1,4 +1,5 @@
 # Paper Title Recommender
+*This repo is a work in progress, and currently not yet usable as described below.*
 This repo contains the code to train and apply a paper title recommender system.
 There are two title generation modes:
 * __MLE title__\
