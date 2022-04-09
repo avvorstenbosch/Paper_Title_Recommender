@@ -7,10 +7,9 @@ In this mode, the most probable (maximum likelihood estimator) title is selected
 * __Random title__\
 In this mode, the user can specify the Temperature and generate titles based on random sampling
 
-
-
 # How to use
 
+## Generating Titles
 There are two main ways to run the code.
 The first mode is by specifying the required text fields via de CLI:\
 ```$python main --category="CATGEGORY" --abstract="ABSTRACT" --name="FILENAME"```\
@@ -18,7 +17,7 @@ The first mode is by specifying the required text fields via de CLI:\
 A more convenient, which supports batch processing, is refering to a .csv file:\
 ```$python main --file="./inputs/MYFILES.csv" --name="FILENAME"```\
 \
-The results are saved at `./input/FILENAME.txt` and `./input/FILENAME.json`\
+The results are saved at `./results/FILENAME.txt` and `./results/FILENAME.json`\
 \
 An example of the generated output is shown here:\
 `TODO output example`\
@@ -30,6 +29,13 @@ In these cases it is also the case that a non-expert could not have been generat
 \
 I recommend you use this algoritm as a way to boost your own creativity and hopefully be inspired by some of the suggestions. \
 
+## Training 
+If you want to do your own training, you can fetch the data using the python kaggle API.
+Download `kaggle.json` from the website, and put it in `~/.kaggle/`. Next, run:
+```$python fetch_dataset.py```
+This fetches the arxiv metadata dataset and stores it at `./data`.
+You need to unzip the file yourself to continue.
+
 # How it works
 
 This project makes use of the `Huggingface` library to perform abstractive title generation.\
@@ -37,6 +43,6 @@ This is achieved by finetuning `GPT2` on the `Arxiv Metdata dataset`.\
 For my own experiments, I finetuned the network for roughly 20.000 timesteps with a batchsize of 8.\
 Different values might be more optimal, but the results generated with these settings were pleasing upon manual inspection of random samples.
 
-
+# 
 
 
