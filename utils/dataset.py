@@ -89,8 +89,10 @@ def load_arxiv_dataset(tokenizer, samples=2e5):
     logger.info("Loading dataset from processed CSV.")
     file_path = "./data/arxiv_metadata_small.csv"
     df_full = pd.read_csv(file_path)
-    df = df.sample(samples, random_state=2112)
-
+    try:
+        df = df.sample(samples, random_state=2112)
+    except ValueError as e:
+        logger.exception(f"The max amount of samples is {len(df_full):.0f}, you tried to select {samples:.0f} samples.")
     # divide into test and train
     logger.info("Creating train and test sets.")
     X_train_raw, X_test = train_test_split(
