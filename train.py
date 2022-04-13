@@ -9,14 +9,16 @@ from torch.utils.data import Dataset
 from sklearn.model_selection import train_test_split
 from transformers import GPT2Tokenizer, TrainingArguments, Trainer, GPT2LMHeadModel
 from kaggle.api.kaggle_api_extended import KaggleApi
-from utils.dataset import process_raw_arxiv_dataset
+from utils.dataset import process_raw_arxiv_dataset, load_arxiv_dataset
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 # Set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 savepath = "./results/arxiv-model-" + today.strftime("%Y%m%d")
+
 
 @click.command()
 @click.option("--savepath", help="Where to save trained model", default=savepath)
@@ -25,22 +27,34 @@ savepath = "./results/arxiv-model-" + today.strftime("%Y%m%d")
 )
 @click.option("--device", help="Select on which device to train the NN", default=device)
 @click.option("--samples", help="How many samples to train on", default=2e5)
-@click.option("--num_train_epochs", help="How many training epochs to perform", default=1)
-@click.option("--save_steps". help="Save model every N training steps", default=50000)
-@click.otpion("--per_device_train_batch_size", help="Batchsize as sent to device", default=1)
-@click.option("--gradient_accumalation_steps", help="How many per_device_batches to accumalate per training step", default=8)
+@click.option(
+    "--num_train_epochs", help="How many training epochs to perform", default=1
+)
+@click.option("--save_steps", help="Save model every N training steps", default=50000)
+@click.otpion(
+    "--per_device_train_batch_size", help="Batchsize as sent to device", default=1
+)
+@click.option(
+    "--gradient_accumalation_steps",
+    help="How many per_device_batches to accumalate per training step",
+    default=8,
+)
 def train():
     if device == "cuda" and not torch.cuda.is_available():
         logger.error("No GPU detected, please select a different device for training.")
         raise RuntimeError("Cuda device not available")
-    
+
     if os.path.exists(savepath) and override == False:
         logger.error("Trained model already exists.")
         logger.error("Switch to inference mode, or set 'override'=True")
-    
+
     if not os.path.exists("./data/arxiv-metadata-oai-snapshot.json"):
-        logger.error("The training data cannot be found, please make sure the data is located in ./data")
-        logger.error("You can fetch the data from kaggle.com by running 'fetch_dataset.py'")
+        logger.error(
+            "The training data cannot be found, please make sure the data is located in ./data"
+        )
+        logger.error(
+            "You can fetch the data from kaggle.com by running 'fetch_dataset.py'"
+        )
         raise RuntimeError("Dataset wasn't found")
     elif not os.path.exists("./data/arxiv_metadata_small.csv"):
         logger.info("Processing raw data into smaller usable dataset.")
@@ -96,6 +110,7 @@ def train():
 
     logger.info("Finished training sequence, saving model.")
     model.save_pretrained(savepath)
+
 
 if __name__ == "__main__":
     train()
