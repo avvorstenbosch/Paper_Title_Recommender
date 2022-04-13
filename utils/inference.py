@@ -22,7 +22,7 @@ def Maximum_likelihood_estimate(input, model, tokenizer, num_beams=1000, device=
 
     returns
     -------
-    MLE_output : tokens
+    MLE_output : list-tokens
         tokenized output prediction
     """
     input = tokenizer(f"{input}", return_tensors="pt").input_ids.to(device)
@@ -34,7 +34,7 @@ def Maximum_likelihood_estimate(input, model, tokenizer, num_beams=1000, device=
         early_stopping=True,
         num_beams=num_beams,
     )
-    return MLE_output
+    return [MLE_output]
 
 
 def random_sampling(
