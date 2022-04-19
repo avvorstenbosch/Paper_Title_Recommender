@@ -28,7 +28,7 @@ def Maximum_likelihood_estimate(input, model, tokenizer, num_beams=1000, device=
     input = tokenizer(f"{input}", return_tensors="pt").input_ids.to(device)
 
     MLE_output = model.generate(
-        generated,
+        input,
         max_length=1024,
         num_return_sequences=1,
         early_stopping=True,

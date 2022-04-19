@@ -108,8 +108,12 @@ def train():
         },
     ).train()
 
-    logger.info("Finished training sequence, saving model.")
+    logger.info("Finished training sequence, moving model to cpu and saving.")
+
+    # This prevents GPU OOM errors at the most crucial step
+    model.to("cpu")
     model.save_pretrained(savepath)
+    logger.info(f"Model succesfully saved at: {savepath}")
 
 
 if __name__ == "__main__":

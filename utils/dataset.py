@@ -92,7 +92,9 @@ def load_arxiv_dataset(tokenizer, samples=2e5):
     try:
         df = df.sample(samples, random_state=2112)
     except ValueError as e:
-        logger.exception(f"The max amount of samples is {len(df_full):.0f}, you tried to select {samples:.0f} samples.")
+        logger.exception(
+            f"The max amount of samples is {len(df_full):.0f}, you tried to select {samples:.0f} samples."
+        )
     # divide into test and train
     logger.info("Creating train and test sets.")
     X_train_raw, X_test = train_test_split(
@@ -107,7 +109,10 @@ def load_arxiv_dataset(tokenizer, samples=2e5):
     return X_train, X_test
 
 
-def process_raw_arxiv_dataset(path_raw_data="./data/arxiv-metadata-oai-snapshot.json", savepath="./data/arxiv_metadata_small.csv"):
+def process_raw_arxiv_dataset(
+    path_raw_data="./data/arxiv-metadata-oai-snapshot.json",
+    savepath="./data/arxiv_metadata_small.csv",
+):
     """
     Generate a smaller usefull dataset from the full metadata set
 
@@ -120,12 +125,12 @@ def process_raw_arxiv_dataset(path_raw_data="./data/arxiv-metadata-oai-snapshot.
     """
     df = pd.read_json(path_raw_data, lines=True)
     df = df[["title", "categories", "abstract"]]
-    
+
     # Remove abstracts that are to long for the model
     # 2000 is chosen as a safe value
     MAX_LEN_ABSTRACT = 2000
-    df = df[df.abstract.str.len() =< MAX_LEN_ABSTRACT]
+    df = df[df.abstract.str.len() <= MAX_LEN_ABSTRACT]
 
-    #Select first categorie as THE categorie
+    # Select first categorie as THE categorie
     df.categories = df.categories.str.split(" ").str[0]
     df.to_csv(savepath, index=False)
